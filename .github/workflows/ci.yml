@@ -1,0 +1,44 @@
+on: push
+name: Continuous Integration
+jobs:
+    unit-tests-postgres-13:
+        runs-on: ubuntu-latest
+        services:
+            postgres:
+                image: postgres:13
+                env:
+                    POSTGRES_USER: postgres
+                    POSTGRES_PASSWORD: postgres
+                    POSTGRES_DB: test_db
+                    TZ: America/Sao_Paulo
+                ports:
+                    - 5432:5432
+                options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+        steps:
+            - uses: actions/checkout@v2
+
+            - name: Set up Python 3.8
+              uses: actions/setup-python@v2
+              with:
+                  python-version: 3.8
+
+            - name: Install dependencies
+              run: |
+                  python -m pip install --upgrade pip
+                  pip install -r requirements.txt
+
+            - name: Run tests
+              run: |
+                  python -m pytest
+
+            - name: Export coverage report
+              run: |
+                  coverage run -m pytest
+                  coverage html
+                  mv htmlcov/ $GITHUB_WORKSPACE
+                  
+            - name: Deploy to GitHub Pages
+              uses: peaceiris/actions-gh-pages@v3
+              with:
+                github_token: ${{ secrets.GITHUB_TOKEN }}
+                publish_dir: $GITHUB_WORKSPACE/htmlcov

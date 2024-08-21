@@ -3,20 +3,21 @@
 FROM python:3.12-slim
 
 # Set working directory
-WORKDIR /app
+WORKDIR /application
+#RUN mkdir /application/app
 
 # Installing python dependencies
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 
-# Copy the environment variables file into the container
-COPY .env /app
-
 # Copy the source code into the container
-COPY src /app
+COPY app/ /application/app
+
+# Copy the environment variables file into the container
+COPY config/env/.env.dev /application/.env
 
 # Expose the port
 EXPOSE 8000
 
 # Run the application
-CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "app.app:app", "--host", "0.0.0.0", "--port", "8000"]

@@ -12,7 +12,6 @@ class AppSettings(BaseSettings):
     DESCRIPTION: str = "FastAPI App"
     CONTACT_NAME: str = "John Doe"
     CONTACT_EMAIL: str = "johndoe@gmail.com"
-    MODE: str = "dev"
     CORS_ALLOW_ORIGINS: str = "*"
     CORS_ALLOW_CREDENTIALS: bool = True
     CORS_ALLOW_METHODS: str = "*"

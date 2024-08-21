@@ -48,7 +48,7 @@ class DatabaseInterface:
                 return True
         except Exception as e:
             if raise_exception:
-                raise HTTPException(status_code=500, detail='Database connection failed')
+                raise Exception('Database connection failed')
             return False
 
     def get_declarative_base(self):
@@ -65,7 +65,7 @@ class DatabaseInterface:
             with self.SessionLocal() as session:
                 yield session
         except Exception as e:
-            raise HTTPException(status_code=500, detail='Failed to create session object')
+            raise Exception('Failed to create session object')
 
     def create_tables(self):
         """
@@ -74,7 +74,7 @@ class DatabaseInterface:
         try:
             self.declarative_base.metadata.create_all(self.engine, checkfirst=True)
         except Exception as e:
-            raise HTTPException(status_code=500, detail='Failed to create tables')
+            raise Exception('Failed to create tables')
         
     def get_metadata_tables(self):
         """
@@ -95,7 +95,7 @@ class DatabaseInterface:
         try:
             self.declarative_base.metadata.drop_all(self.engine, checkfirst=True)
         except Exception as e:
-            raise HTTPException(status_code=500, detail=f'Failed to drop tables: {e}')
+            raise Exception(f'Failed to drop tables: {e}')
 
     def reset_tables(self):
         """

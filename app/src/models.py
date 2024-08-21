@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String, Boolean, DateTime
-from datetime import datetime
+from datetime import datetime as dt
 
 from .database import DatabaseInterface
 
@@ -17,8 +17,8 @@ class User(Base):
     last_name = Column(String)
     password = Column(String)
     is_active = Column(Boolean, default=True)
-    created_at = Column(DateTime, default=datetime.datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.datetime.utcnow)
+    created_at = Column(DateTime, default=dt.now())
+    updated_at = Column(DateTime, default=dt.now(), onupdate=dt.now())
     
     def __repr__(self):
         return f'<User {self.username}|{self.email} - {self.updated_at}>'
